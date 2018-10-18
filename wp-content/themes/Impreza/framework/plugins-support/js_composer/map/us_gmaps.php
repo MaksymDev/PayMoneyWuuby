@@ -1,0 +1,205 @@
+<?php defined( 'ABSPATH' ) OR die( 'This script cannot be accessed directly.' );
+
+/**
+ * Shortcode: us_gmaps
+ *
+ * @var   $shortcode string Current shortcode name
+ * @var   $config    array Shortcode's config
+ *
+ * @param $config ['atts'] array Shortcode's attributes and default values
+ */
+vc_map(
+	array(
+		'base' => 'us_gmaps',
+		'name' => __( 'Google Maps', 'us' ),
+		'description' => '',
+		'icon' => 'icon-wpb-map-pin',
+		'category' => us_translate( 'Content', 'js_composer' ),
+		'weight' => 160,
+		'params' => array(
+			array(
+				'param_name' => 'marker_address',
+				'heading' => __( 'Address', 'us' ),
+				'description' => __( 'Specify address in accordance with the format used by the national postal service of the country concerned.', 'us' ) . ' ' . sprintf( __( 'Or use geo coordinates, for example: %s', 'us' ), '38.6774156, 34.8520661' ),
+				'type' => 'textfield',
+				'std' => $config['atts']['marker_address'],
+				'holder' => 'div',
+			),
+			array(
+				'param_name' => 'marker_text',
+				'heading' => __( 'Marker Text', 'us' ),
+				'description' => __( 'Enter your content, HTML tags are allowed.', 'us' ),
+				'type' => 'textarea_raw_html',
+				'std' => $config['atts']['marker_text'],
+				'edit_field_class' => 'vc_col-sm-12 pretend_textfield',
+			),
+			array(
+				'type' => 'checkbox',
+				'param_name' => 'show_infowindow',
+				'value' => array( __( 'Show Marker Text when map is loaded', 'us' ) => TRUE ),
+			),
+			array(
+				'param_name' => 'custom_marker_img',
+				'heading' => __( 'Custom Marker Image', 'us' ),
+				'type' => 'attach_image',
+				'std' => $config['atts']['custom_marker_img'],
+				'edit_field_class' => 'vc_col-sm-6',
+			),
+			array(
+				'param_name' => 'custom_marker_size',
+				'heading' => __( 'Marker Image Size', 'us' ),
+				'type' => 'dropdown',
+				'value' => array(
+							'20 x 20' => 20,
+							'30 x 30' => 30,
+							'40 x 40' => 40,
+							'50 x 50' => 50,
+							'60 x 60' => 60,
+							'70 x 70' => 70,
+							'80 x 80' => 80,
+				),
+				'std' => $config['atts']['custom_marker_size'],
+				'dependency' => array( 'element' => 'custom_marker_img', 'not_empty' => TRUE ),
+				'edit_field_class' => 'vc_col-sm-6',
+			),
+			array(
+				'type' => 'param_group',
+				'param_name' => 'markers',
+				'params' => array(
+					array(
+						'param_name' => 'marker_address',
+						'heading' => __( 'Address', 'us' ),
+						'description' => __( 'Specify address in accordance with the format used by the national postal service of the country concerned.', 'us' ) . ' ' . sprintf( __( 'Or use geo coordinates, for example: %s', 'us' ), '38.6774156, 34.8520661' ),
+						'type' => 'textfield',
+						'std' => $config['items_atts']['marker_address'],
+						'admin_label' => TRUE,
+					),
+					array(
+						'param_name' => 'marker_text',
+						'heading' => __( 'Marker Text', 'us' ),
+						'description' => __( 'Enter your content, HTML tags are allowed.', 'us' ),
+						'type' => 'textarea',
+						'std' => $config['items_atts']['marker_text'],
+						'edit_field_class' => 'vc_col-sm-12 pretend_textfield',
+					),
+					array(
+						'param_name' => 'marker_img',
+						'heading' => __( 'Custom Marker Image', 'us' ),
+						'type' => 'attach_image',
+						'std' => $config['items_atts']['marker_img'],
+						'edit_field_class' => 'vc_col-sm-6',
+					),
+					array(
+						'param_name' => 'marker_size',
+						'heading' => __( 'Marker Image Size', 'us' ),
+						'type' => 'dropdown',
+						'value' => array(
+							'20 x 20' => 20,
+							'30 x 30' => 30,
+							'40 x 40' => 40,
+							'50 x 50' => 50,
+							'60 x 60' => 60,
+							'70 x 70' => 70,
+							'80 x 80' => 80,
+						),
+						'std' => $config['items_atts']['marker_size'],
+						'dependency' => array( 'element' => 'marker_img', 'not_empty' => TRUE ),
+						'edit_field_class' => 'vc_col-sm-6',
+					),
+				),
+				'group' => __( 'Additional Markers', 'us' ),
+			),
+			array(
+				'param_name' => 'type',
+				'heading' => __( 'Map Type', 'us' ),
+				'type' => 'dropdown',
+				'value' => array(
+					__( 'Roadmap', 'us' ) => 'roadmap',
+					__( 'Roadmap + Terrain', 'us' ) => 'terrain',
+					__( 'Satellite', 'us' ) => 'satellite',
+					__( 'Satellite + Roadmap', 'us' ) => 'hybrid',
+				),
+				'std' => $config['atts']['type'],
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'height',
+				'heading' => __( 'Map Height (pixels)', 'us' ),
+				'type' => 'textfield',
+				'std' => $config['atts']['height'],
+				'edit_field_class' => 'vc_col-sm-6',
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'zoom',
+				'heading' => __( 'Map Zoom', 'us' ),
+				'type' => 'dropdown',
+				'value' => array(
+					'1' => '1',
+					'2' => '2',
+					'3' => '3',
+					'4' => '4',
+					'5' => '5',
+					'6' => '6',
+					'7' => '7',
+					'8' => '8',
+					'9' => '9',
+					'10' => '10',
+					'11' => '11',
+					'12' => '12',
+					'13' => '13',
+					'14' => '14',
+					'15' => '15',
+					'16' => '16',
+					'17' => '17',
+					'18' => '18',
+					'19' => '19',
+					'20' => '20',
+				),
+				'std' => $config['atts']['zoom'],
+				'edit_field_class' => 'vc_col-sm-6',
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'hide_controls',
+				'type' => 'checkbox',
+				'value' => array( __( 'Hide all map controls', 'us' ) => TRUE ),
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'disable_zoom',
+				'type' => 'checkbox',
+				'value' => array( __( 'Disable map zoom on mouse wheel scroll', 'us' ) => TRUE ),
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'disable_dragging',
+				'type' => 'checkbox',
+				'value' => array( __( 'Disable dragging on touch screens', 'us' ) => TRUE ),
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'map_bg_color',
+				'type' => 'colorpicker',
+				'heading' => __( 'Map Background Color', 'us' ),
+				'description' => __( 'This color will be visible when map layer has not yet loaded.', 'us' ),
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'el_class',
+				'heading' => us_translate( 'Extra class name', 'js_composer' ),
+				'type' => 'textfield',
+				'std' => $config['atts']['el_class'],
+				'group' => __( 'More Options', 'us' ),
+			),
+			array(
+				'param_name' => 'map_style_json',
+				'description' => sprintf( __( 'Enter JSON code for styling the map. You can find good examples on %s.', 'us' ), '<a href="https://snazzymaps.com/" target="_blank">snazzymaps.com</a>' ),
+				'type' => 'textarea_raw_html',
+				'std' => $config['atts']['map_style_json'],
+				'group' => __( 'Map Style', 'us' ),
+			),
+		),
+	)
+);
+vc_remove_element( 'vc_gmaps' );
